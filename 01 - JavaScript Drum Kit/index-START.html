@@ -7,7 +7,6 @@
 </head>
 <body>
 
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -59,6 +58,24 @@
 
 <script>
 
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // берем элемент с классом key и атрибутом data-key
+    if(!audio) return; // остановка функции
+    audio.currentTime = 0; // быстрая перемотка на начало звука
+    audio.play(); // проигрываем звук
+    key.classList.add('playing'); // добавляем подсветку
+  }
+
+  function removeTransition(e) {
+    if(e.propertyName !== 'transform') return; // останавливаем функцию, если это не 'transform';
+    this.classList.remove('playing'); // удаляем класс 'playing' - конец подсветки
+  }
+
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); //  устанавливаем слушатель события конец анимации на все keys
+
+  window.addEventListener('keydown', playSound);
 </script>
 
 
